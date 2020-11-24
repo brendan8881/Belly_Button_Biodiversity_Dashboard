@@ -25,18 +25,72 @@ function buildMetadata(sample) {
 
 
 //Function to build charts
+function buildCharts(sample) {
+    d3.json("../data/samples.json").then((data) => {
+        var samples = data.samples.filter(sampleObject => sampleObject.id == sample)[0];
+        console.log(samples);
+        var yticks = samples.otu_ids.slice(0, 10).map(otuID => `OTU ${otuID}`);
+        var barData = [
+            {
+                y: yticks,
+                x: samples.sample_values.slice(0, 10),
+                text: samples.otu_labels.slice(0, 10),
+                type: "bar",
+                orientation: "h"
 
-//Function to build barchart
+            }
+        ];
+
+        var barLayout = {
+            title: "Top Ten Bacteria",
+            margin: { t: 30, l: 150 },
+            yaxis: {
+                autorange:"reversed"
+            }
+        };
 
 
-//Bubble chart
-// Plotly.newPlot("bubble", bubbleData, bubbleLayout)
+        Plotly.newPlot("bar", barData, barLayout);  
+   
+      //Bubble chart
+        var bubbleData = [
+            {
+                x: samples.otu_ids,
+                y:samples.sample_values,
+                text:samples.otu_labels,
+                mode:"markers",
+                marker:{
+                    size: samples.sample_values,
+                    color: samples.otu_ids,
+                    colorscale:"Hot"
+                }
+            }
+        ]; 
+
+        var bubbleLayout = {
+            title:"Bacteria per Sample",
+            margin: {t:0},
+            hovermode: "closest",
+            xaxis: { title:"OTU ID"},
+            margin: {t:30}
+
+        };
+
+
+        Plotly.newPlot("bubble", bubbleData, bubbleLayout);  
+    });
+
+}
+
 //Bonus Freq Gauge
 
 
 
 //Event listner
-
+function optionChanged(nextSample) {
+    buildMetadata(nextSample)
+    buildCharts(nextSample)
+}
 
 
 //Function for initialization
@@ -63,6 +117,7 @@ function init() {
 
         var firstSample = sampleNames[0];
         buildMetadata(firstSample);
+        buildCharts(firstSample);
     });
 }
 init();
