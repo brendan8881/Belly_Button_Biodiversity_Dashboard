@@ -1,6 +1,6 @@
 // Function to build Metadata
 function buildMetadata(sample) {
-    d3.json("../data/samples.json").then((data) => {
+    d3.json("./data/samples.json").then((data) => {
         var metadata = data.metadata;
 
         //filter data
@@ -26,7 +26,7 @@ function buildMetadata(sample) {
 
 //Function to build charts
 function buildCharts(sample) {
-    d3.json("../data/samples.json").then((data) => {
+    d3.json("./data/samples.json").then((data) => {
         var samples = data.samples.filter(sampleObject => sampleObject.id == sample)[0];
         console.log(samples);
         var yticks = samples.otu_ids.slice(0, 10).map(otuID => `OTU ${otuID}`);
@@ -103,7 +103,7 @@ function init() {
     var selector = d3.select("#selDataset");
 
     //Create a dropdown menu with all samples
-    d3.json("../data/samples.json").then((data) => {
+    d3.json("./data/samples.json").then((data) => {
         var sampleNames = data.names;
         console.log(sampleNames)
         //Use forEach to append text to each sample
